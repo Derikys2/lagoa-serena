@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142e35">
+  <title>Lagoa Serena · Pescaria</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="world.js" defer></script>
+  <script src="progression.js" defer></script>
+  <script src="panels.js" defer></script>
+  <script src="economy-ui.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header><a class="brand" href="./">◈ LAGOA SERENA</a><span class="tag">UM MOMENTO À BEIRA D’ÁGUA</span></header>
+
+    <nav class="section-nav" aria-label="Funções do jogo"><button data-open="catalog">Peixes</button><button data-open="inventory">Inventário</button><button data-open="shop">Loja</button><button data-open="loadout">Equipamentos</button><button data-open="ranking">Ranking</button><button data-open="help">Ajuda</button><button id="debug-open" data-open="debug" hidden>Laboratório</button></nav>
+    <div class="compact-hud"><section class="player-panel" aria-label="Progresso do jogador"><p id="economy-mode" class="eyebrow"></p><div class="player-values"><strong id="gold">0 gold</strong><strong id="player-level">Nível 1</strong></div><label id="xp-label" for="xp-bar">0 / 100 XP</label><progress id="xp-bar" value="0" max="100"></progress></section><section class="world-panel" aria-label="Condições do Rio de Janeiro"><strong id="world-clock">--:--:--</strong><span>Rio de Janeiro</span><p id="world-condition"></p><small id="weather-status"></small></section></div><p id="level-reward" class="level-reward" role="status" hidden></p><div id="unlock-notice" role="status" hidden><span id="unlock-text"></span><button id="unlock-dismiss" aria-label="Dispensar aviso de desbloqueio">Entendi</button></div>
+
+    
+    <p id="economy-message" role="status"></p>
+    <section id="fishing" class="play-layout">
+      <div class="lake-panel">
+        <canvas id="lake" width="900" height="580" aria-label="Lagoa ilustrada com montanhas, árvores e um pescador no píer"></canvas>
+        <div class="location"><span class="dot"></span> LAGOA SERENA <span id="scene-weather">Rio de Janeiro</span></div>
+        <div class="scene-caption">DEVAGAR TAMBÉM É UM BOM RITMO.</div>
+        <div id="welcome" class="overlay"><span class="little-fish">≈</span><h2>O lago está esperando.</h2><p>Lance a linha e mantenha o peixe dentro da barra para trazê-lo até a margem.</p><button id="start">Começar a pescar <span>→</span></button><small>A primeira tentativa normal tem barra maior e movimento suave.</small></div>
+      </div>
+      <section class="controls-panel" aria-labelledby="panel-title">
+        <p class="eyebrow">SUA PRÓXIMA HISTÓRIA</p><h2 id="panel-title">Prepare a linha</h2><p id="status" role="status" aria-live="polite">Um pequeno desafio, sem pressa.</p>
+        <div class="fishing-area"><div class="depth-label"><span>SUPERFÍCIE</span><span>FUNDO</span></div><canvas id="game" width="230" height="390" aria-label="Minijogo: segure para subir a barra e mantenha o peixe dentro dela"></canvas><div class="meter-label"><span>CAPTURA</span><strong id="percent">—</strong></div></div>
+        <button id="cast" disabled>Pescar <span>↗</span></button><button id="hold" class="hold" disabled>Segure para subir ↑</button>
+        <p class="hint"><kbd>Espaço</kbd> ou segure o botão acima.<br>Solte para descer. Acompanhe o peixe.</p>
+        <p id="loadout-summary" class="hint"></p>
+        <p id="cast-conditions" class="hint">As condições no lançamento definem o peixe.</p>
+        <p id="quality-result" class="quality-result" role="status" hidden></p>
+      </section>
+    </section>
+    
+    
+    
+    
+    <dialog id="panel-dialog" aria-labelledby="window-title"><div class="window-header"><h2 id="window-title">Janela</h2><button id="panel-close" aria-label="Fechar janela">Fechar ×</button></div><div id="panel-scroll"><section id="catalog" data-view="catalog" hidden><p>Conheça as espécies e suas condições. Essas dicas não revelam qual peixe está na linha.</p><div id="catalog-list" class="fish-list"></div></section>
+<section id="inventory" data-view="inventory" hidden class="collection"><div class="section-heading"><div><p class="eyebrow">LOJA DA MARGEM · INVENTÁRIO</p><h2>Suas capturas</h2></div><span id="discovered">0 / 5 espécies</span></div><p class="section-description">Capturar rende XP. Venda os peixes para receber gold; suas descobertas permanecem no histórico.</p><div id="fish-list" class="fish-list"></div><p id="save-note" class="save-note"></p></section>
+<section id="shop" data-view="shop" hidden class="collection"><div class="section-heading"><div><p class="eyebrow">LOJA DA MARGEM · MELHORIAS</p><h2>Melhorias e itens</h2></div><strong id="shop-gold">0 gold</strong></div><p class="section-description">Três níveis por equipamento. As melhorias ajudam no controle, mas você ainda precisa acompanhar o peixe.</p><div id="equipment-list" class="equipment-list"></div><h3>Tipos de anzol e iscas</h3><p>Cada desbloqueio entrega uma unidade gratuita. Anzóis são permanentes; iscas são consumíveis.</p><div id="tackle-shop" class="equipment-list"></div></section>
+<section id="loadout" data-view="loadout" hidden><p>Escolha um tipo de anzol e uma isca para o próximo lançamento. Nenhum deles garante espécie ou qualidade.</p><div id="loadout-list"></div><p id="active-effects"></p><p>Os três níveis da melhoria de anzol continuam funcionando junto com o tipo equipado.</p></section>
+<section id="ranking" data-view="ranking" hidden class="collection"><div class="section-heading"><div><p class="eyebrow">RANKING LOCAL</p><h2>Seu registro de pescador</h2></div><strong id="rank-score">0 pontos</strong></div><p id="rank-mode"></p><div class="rank-grid"><div><span>Capturas totais</span><strong id="rank-captures">0</strong></div><div><span>Espécies descobertas</span><strong id="rank-species">0</strong></div><div><span>Espécie mais rara</span><strong id="rank-rarest">—</strong></div><div><span>Gold obtido em vendas</span><strong id="rank-gold">0</strong></div><div><span>Nível do jogador</span><strong id="rank-level">1</strong></div><div><span>Conquista de qualidade</span><strong id="rank-quality">0</strong></div></div><p class="hint">Pontos = 10 × capturas + 75 × espécies descobertas + gold total das vendas + 100 × (nível − 1). Gastar gold não reduz sua pontuação. Este é seu registro pessoal, sem comparação online.</p><p><span id="total">0</span> capturas ao todo.</p></section>
+<section id="help" data-view="help" hidden><h3>Como pescar</h3><p>Clique em Pescar e espere a mordida. Segure Espaço, o botão ou a pista para subir; solte para descer. Acompanhe o peixe dentro da barra verde.</p><p>Abrir uma janela pausa a tentativa. Fechar retoma sem contar a pausa no desempenho. A isca é gasta no lançamento, mesmo se o peixe escapar ou você recarregar.</p><h3>Capturas e qualidade</h3><p>Capturar dá peixe e XP; vender dá gold. Raridade da espécie e qualidade do exemplar são diferentes. Lendário exige 100% de tempo dentro da barra e tem apenas 2% de chance.</p><h3>Hora e clima do Rio</h3><p id="world-source" role="status"></p><p id="world-effects"></p><p id="world-odds"></p><p>Hora: America/Sao_Paulo. Clima consultado a cada 15 minutos; sem rede usamos o último dado válido ou céu limpo identificado como padrão.</p><small>Dados: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a></small><h3>Equipamento e progresso</h3><p id="gear-summary"></p><p>Melhorias de nível e tipos de anzol são independentes. Seus efeitos se combinam uma única vez. Cada item novo rende uma unidade gratuita ao desbloquear. Equipe em Equipamentos e reponha iscas na Loja. O salvamento é local a este navegador.</p></section>
+<section id="debug-panel" data-view="debug" class="debug-panel" hidden aria-label="Depuração">
+      <strong>LABORATÓRIO · condições simuladas</strong>
+      <label><input id="debug-enabled" type="checkbox"> Ativar simulação (progresso de teste separado)</label>
+      <label>Horário <select id="debug-period"><option value="day">Dia · 12h</option><option value="dusk">Entardecer · 18h</option><option value="night">Noite · 22h</option></select></label>
+      <label>Clima <select id="debug-weather"><option value="clear">Céu limpo</option><option value="cloudy">Nublado</option><option value="rain">Chuva</option></select></label>
+      <label>Peixe de teste <select id="debug-fish"><option value="">Sorteio normal</option></select></label>
+      <button id="debug-kit" disabled>Adicionar kit de teste: 5 de cada espécie</button>
+      <label>Desempenho de teste <select id="debug-performance"><option value="50">50%</option><option value="70">70%</option><option value="85">85%</option><option value="97">97%</option><option value="99.9">99,9%</option><option value="100">100% perfeito</option></select></label>
+      <label>Sorteio de qualidade <select id="debug-roll"><option value="random">Aleatório</option><option value="0">Primeiro percentil</option><option value="0.99">Último percentil</option></select></label>
+      <button id="debug-quality" disabled>Gerar captura de teste com esse desempenho</button>
+      <p>O teste de desempenho cria um exemplar apenas no laboratório. O último percentil testa a maior qualidade permitida pela faixa.</p>
+      <p>Afeta o próximo lançamento. Desmarque para voltar imediatamente às condições reais.</p>
+    </section>
+<section data-view="sale" hidden id="sale-dialog" aria-labelledby="sale-title"><h2 id="sale-title">Vender todos desta espécie?</h2><p id="sale-summary"></p><div class="sale-actions"><button id="sale-cancel">Cancelar</button><button id="sale-confirm">Confirmar venda</button></div></section></div></dialog>
+  </main>
+</body>
+</html>

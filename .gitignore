@@ -1,0 +1,28 @@
+# Dependências e artefatos locais
+node_modules/
+coverage/
+dist/
+*.log
+*.tmp
+*.bak
+*.zip
+test-results/
+playwright-report/
+
+# Credenciais e configurações privadas
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+.npmrc
+.codex/
+.agents/
+
+# Editor e sistema operacional
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
